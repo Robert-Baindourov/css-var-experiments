@@ -1,4 +1,10 @@
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+Project is intended as an example on how to use CSS VARS PONYFILL.
+Basic steps after creating with CRA, were to add node-sass and sass-loader.
+A _variabls.scss.
+And use corresponding variable in App.scss.
+Then import and execute cssVars. 
+
 
 ## Available Scripts
 
