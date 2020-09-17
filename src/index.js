@@ -4,9 +4,6 @@ import './index.css';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
 
-import cssVars from 'css-vars-ponyfill';
-
-
 
 ReactDOM.render(
   <React.StrictMode>
