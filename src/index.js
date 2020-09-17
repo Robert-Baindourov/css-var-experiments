@@ -6,9 +6,7 @@ import * as serviceWorker from './serviceWorker';
 
 import cssVars from 'css-vars-ponyfill';
 
-cssVars({
- onlyLegacy: false
-});
+
 
 ReactDOM.render(
   <React.StrictMode>
