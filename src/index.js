@@ -1,10 +1,14 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-
 import './index.css';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
 
+import cssVars from 'css-vars-ponyfill';
+
+cssVars({
+ onlyLegacy: false
+});
 
 ReactDOM.render(
   <React.StrictMode>
