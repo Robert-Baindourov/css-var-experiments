@@ -71,11 +71,7 @@ module.exports = function(webpackEnv) {
       isEnvDevelopment && require.resolve('style-loader'),
       isEnvProduction && {
         loader: MiniCssExtractPlugin.loader,
-        // css is located in `static/css`, use '../../' to locate index.html folder
-        // in production `paths.publicUrlOrPath` can be a relative path
-        options: paths.publicUrlOrPath.startsWith('.')
-          ? { publicPath: '../../' }
-          : {},
+        options: paths.publicUrlOrPath.startsWith('.') ? { publicPath: '../../' } : {},
       },
       {
         loader: require.resolve('css-loader'),
@@ -83,6 +79,8 @@ module.exports = function(webpackEnv) {
       },
       
     ].filter(Boolean);
+
+
     if (preProcessor) {
       loaders.push(
         {
@@ -92,10 +90,8 @@ module.exports = function(webpackEnv) {
           },
         },
         {
-          loader: require.resolve(preProcessor),
-          options: {
-            sourceMap: true,
-          },
+          loader: require.resolve(preProcessor.name),
+          options: preProcessor.options 
         }
       );
     }
@@ -367,12 +363,10 @@ module.exports = function(webpackEnv) {
                 {
                   importLoaders: 3,
                   sourceMap: isEnvProduction && shouldUseSourceMap,
-                  sassOptions: {
-                        outputStyle: 'expanded'
-                    }
+                  
                   
                 },
-                'sass-loader'
+                { name: 'sass-loader', options: {              sourceMap: true,                }}
               ),
               // Don't consider CSS imports dead code even if the
               // containing package claims to have no side effects.
@@ -392,7 +386,7 @@ module.exports = function(webpackEnv) {
                     getLocalIdent: getCSSModuleLocalIdent,
                   },
                 },
-                'sass-loader'
+                { name: 'sass-loader', options: {} }
               ),
             },
             // "file" loader makes sure those assets get served by WebpackDevServer.
