@@ -367,6 +367,10 @@ module.exports = function(webpackEnv) {
                 {
                   importLoaders: 3,
                   sourceMap: isEnvProduction && shouldUseSourceMap,
+                  sassOptions: {
+                        outputStyle: 'expanded'
+                    }
+                  
                 },
                 'sass-loader'
               ),
