@@ -366,7 +366,13 @@ module.exports = function(webpackEnv) {
                   
                   
                 },
-                { name: 'sass-loader', options: {              sourceMap: true,                }}
+                { name: 'sass-loader', options: {
+                  
+                  sassOptions: {
+                      outputStyle: 'expanded'
+                  }
+                
+              }}
               ),
               // Don't consider CSS imports dead code even if the
               // containing package claims to have no side effects.
@@ -386,7 +392,13 @@ module.exports = function(webpackEnv) {
                     getLocalIdent: getCSSModuleLocalIdent,
                   },
                 },
-                { name: 'sass-loader', options: {} }
+                { name: 'sass-loader', options: {
+                  
+                    sassOptions: {
+                        outputStyle: 'expanded'
+                    }
+                  
+                } }
               ),
             },
             // "file" loader makes sure those assets get served by WebpackDevServer.
