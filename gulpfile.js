@@ -5,8 +5,7 @@ const gulp = require ('gulp');
 
 gulp.task( 'css', ()=>{
     const plugin = [
-        autoprefixer({browsers: ['safari 7']}),
-        cssnano()
+        autoprefixer({browsers: ['safari 7']}),        
     ];
     return gulp.src('./build/static/css/*.css')
         .pipe(postcss(plugin))
