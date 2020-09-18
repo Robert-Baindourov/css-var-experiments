@@ -1,0 +1,23 @@
+// TODO: Fix image size once MUI removed
+.pngButton {
+  width: 150%;
+  -webkit-filter: invert(56%); /* for Tivo device */
+  filter: invert(56%);
+  &.selected {
+    -webkit-filter: invert(0%); /* for Tivo device */
+    filter: invert(0%);
+  }
+}
+
+.button {
+  display: -webkit-flex;
+  display: flex;  
+}
+
+.disabled {
+  opacity: 0.4;
+}
+
+.hide {
+  display: none;
+}

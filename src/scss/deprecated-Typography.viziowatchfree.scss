@@ -1,0 +1,168 @@
+// @import 'typography.viziowatchfree';
+
+.headline1,
+.headline2,
+.headline3,
+.headline4,
+.headline5 {
+  // font-family: 'Oswald', sans-serif;
+}
+
+.body1,
+.body2,
+.body3 {
+  // font-family: 'Nunito', sans-serif;
+}
+
+.headline6,
+.headline7,
+.button,
+.buttonMobile,
+.caption1,
+.caption2,
+.overline,
+.subtitle1,
+.subtitle2 {
+  // font-family: 'Nunito Sans', sans-serif;
+}
+
+.headline1,
+.headline2,
+.headline3,
+.headline4,
+.headline6,
+.subtitle2 {
+  font-weight: 600; // semi-bold
+}
+
+.caption1,
+.subtitle1,
+.headline5,
+.headline7,
+.overline {
+  font-weight: 700; // bold
+}
+
+.button,
+.buttonMobile,
+.caption2 {
+  font-weight: 800; // extra-bold
+}
+
+.headline1 {
+  font-size: 3.885rem;
+  letter-spacing: 0.05em;
+  line-height: 0.87;
+}
+
+.headline2 {
+  font-size: 2.346rem;
+  letter-spacing: 0.014em;
+  line-height: 1.29;
+}
+
+.headline3 {
+  font-size: 1.462rem;
+  letter-spacing: 0.02em;
+  line-height: 1.21;
+}
+
+.headline4 {
+  font-size: 0.923rem;
+  letter-spacing: 0.01em;
+  line-height: 1.07;
+}
+
+.headline5 {
+  font-size: 0.654rem;
+  letter-spacing: 0.02em;
+  line-height: 1.59;
+}
+
+.headline6 {
+  font-size: 1.115rem;
+  letter-spacing: 0.01em;
+  line-height: 1.34;
+}
+
+.headline7 {
+  font-size: 1rem;
+  letter-spacing: 0;
+  line-height: 1.34;
+}
+
+.body1 {
+  font-size: 1rem;
+  letter-spacing: 0.01em;
+  line-height: 1.36;
+}
+
+.body2 {
+  font-size: 0.885rem;
+  letter-spacing: 0.01em;
+  line-height: 1.36;
+}
+
+.body3 {
+  font-size: 1rem;
+  letter-spacing: 0;
+  line-height: 1.29;
+}
+
+.button {
+  font-size: 1.077rem;
+  letter-spacing: 0.04em;
+  line-height: 1.36;
+}
+
+.buttonMobile {
+  font-size: 0.577rem;
+  letter-spacing: 0;
+  line-height: 1.35;
+}
+
+.caption1 {
+  font-size: 0.846rem;
+  letter-spacing: 0.04em;
+  line-height: 1.25;
+}
+
+.caption2 {
+  font-size: 0.808rem;
+  letter-spacing: 0.04em;
+  line-height: 1.36;
+}
+
+.overline {
+  font-size: 0.346rem;
+  letter-spacing: 0.15em;
+  line-height: 1.23;
+}
+
+.subtitle1 {
+  font-size: 0.769rem;
+  letter-spacing: 0.01em;
+  line-height: 1.36;
+}
+
+.subtitle2 {
+  font-size: 0.538rem;
+  letter-spacing: 0.01em;
+  line-height: 1.58;
+}
+
+.button,
+.buttonMobile,
+.caption2,
+.headline1,
+.headline2,
+.headline3,
+.headline4,
+.headline6,
+.subtitle2 {
+  font-weight: 700; // bold
+}
+
+.headline8 {
+  font-size: 0.899989rem;
+}

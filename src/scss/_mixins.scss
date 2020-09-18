@@ -1,0 +1,52 @@
+@mixin boxed($color: #fff, $thickness: 4px) {
+  border: $thickness solid $color;
+  border-radius: var(--border-radius-small);
+  box-sizing: border-box;
+}
+
+@mixin selectedBox($color: #fff, $thickness: 4px) {
+  > div {
+    border: $thickness solid $color;
+    border-radius: 0;
+    box-sizing: border-box;
+  }
+
+  div:nth-child(1) {
+    border-bottom-left-radius: 10px;
+    border-right: 0;
+    border-top-left-radius: 10px;
+  }
+
+  div:nth-child(2) {
+    border-bottom-right-radius: 10px;
+    border-left: 0;
+    border-top-right-radius: 10px;
+    margin-left: 0;
+    padding-left: 10px;
+  }
+}
+
+@mixin center {
+  align-items: center;
+  display: -webkit-flex;
+  display: flex;  
+  justify-content: center;
+}
+
+@mixin chevron($dir: 'right', $size: 0.535725rem, $color: #fff) {
+  width: $size;
+  height: $size;
+  display: inline-block;
+  border-right: 0.107145rem solid $color;
+  border-bottom: 0.107145rem solid $color;
+
+  @if ($dir == 'right') {
+    transform: rotate(-45deg);
+  } @else if ($dir == 'left') {
+    transform: rotate(135deg);
+  } @else if ($dir == 'up') {
+    transform: rotate(-135deg);
+  } @else if ($dir == 'down') {
+    transform: rotate(45deg);
+  }
+}

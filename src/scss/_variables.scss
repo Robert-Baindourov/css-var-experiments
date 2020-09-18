@@ -1,0 +1,63 @@
+:root {
+  --border-radius-small: 2px;
+  --border-radius-big: 4px;
+  --border-radius-huge: 8px;
+  --breakpoint: 1000px;
+  --navigationHeight: 7rem;
+
+  // Colors
+  --background-color: #212223;
+  --background-highlighted-color: #272727;
+  --black: #000;
+  --gray: #a8a8a8;
+  --grayText: #a0a0a0;
+  --grayDark: #6b6b6b;
+  --grayDarker: #151515;
+  --grayLight: #ebebeb;
+  --gray34: #575757; // background color for notifications
+  --gray3D: #3d3d3d; // background color for progress bar
+  --red: #c11111;
+  --unfocused-text: #939393;
+  --unfocused-dialog-button: #323232;
+  --white: #fff;
+  --yellow: #ffde2b; // brand color yellow
+
+  // RGB Colors
+  --black-rgb: 0, 0, 0;
+
+  // Gutters
+  --gap: 1vh;
+  --channelGap: 4vh;
+
+
+  --logoWidth: 160px;
+  --numberWidth: 50px;
+  --channelHeight: 3.75rem;
+
+  // Gradients
+  --shadowGradient: -webkit-gradient(
+    linear,
+    left top,
+    left bottom,
+    color-stop(0.1, rgb(0, 0, 0)),
+    color-stop(0.25, rgba(0, 0, 0, 0.25)),
+    color-stop(0.35, rgba(0, 0, 0, 0.1)),
+    color-stop(1, rgba(0, 0, 0, 0))
+  );
+  --leftShadowGradient: linear-gradient(
+    to top,
+    var(--black) 0%,
+    rgba(0, 0, 0, 0.93) 1%,
+    rgba(0, 0, 0, 0.82) 5%,
+    rgba(22, 22, 22, 0) 15%,
+    rgba(22, 22, 22, 0) 100%
+  );
+}
+
+@media (min-height: var(--breakpoint)) {
+  :root {
+    --border-radius-small: 4px;
+    --border-radius-big: 8px;
+    --border-radius-huge: 16px;
+  }
+}

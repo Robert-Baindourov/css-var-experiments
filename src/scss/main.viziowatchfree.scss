@@ -1,0 +1,21 @@
+@import 'variables.viziowatchfree';
+@import 'font.viziowatchfree';
+@import 'typography.viziowatchfree';
+@import 'global';
+
+html,
+body,
+body > div {
+  font-size: 14pt;
+  line-height: 1.3;
+
+  @media (min-height: 1000px) {
+    font-size: 20pt;
+  }
+}
+
+body {
+  background-color: var(--black);
+  color: var(--grayLight);
+  font-family: 'Benton Sans', sans-serif;
+}

@@ -1,0 +1,17 @@
+.navPadding {
+  flex-shrink: 0;
+  height: var(--navigationHeight);
+}
+
+.flex {
+  display: -webkit-flex;
+  display: flex;  
+  flex-direction: column;
+  height: 100%;
+  left: 0;
+  overflow: hidden;
+  position: absolute;
+  top: 0;
+  width: 100%;
+  z-index: 4;
+}
