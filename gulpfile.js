@@ -1,5 +1,6 @@
 const postcss = require ('gulp-postcss');
 const autoprefixer = require ('autoprefixer');
+const cssnano = require ('cssnano');
 const gulp = require ('gulp');
 
 gulp.task( 'css', ()=>{
@@ -7,15 +8,15 @@ gulp.task( 'css', ()=>{
         autoprefixer({browsers: ['safari 7']}),
         cssnano()
     ];
-    return gulp.src('./build/css/*.css')
+    return gulp.src('./build/static/css/*.css')
         .pipe(postcss(plugin))
         .pipe(gulp.dest('./dest'))
 })
 
 gulp.task( 'serve', gulp.series( 'css', ()=>{
-    gulp.watch("./build/css/*.css")
+    gulp.watch("./build/static/css/*.css")
 }))
 
-gulp.task('default', gulp.series( 'serve',( done )=>{
+gulp.task('default', gulp.series( 'css',( done )=>{
     done();
 }))
