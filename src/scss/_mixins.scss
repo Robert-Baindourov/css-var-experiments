@@ -28,7 +28,6 @@
 
 @mixin center {
   align-items: center;
-  display: -webkit-flex;
   display: flex;  
   justify-content: center;
 }

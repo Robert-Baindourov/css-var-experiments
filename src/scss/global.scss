@@ -41,7 +41,6 @@ body {
 
   #plutotv-app {
     bottom: 0;
-  display: -webkit-flex;
   display: flex;  
     flex-direction: column;
     left: 0;
@@ -55,7 +54,6 @@ body {
   }
 
   main {
-  display: -webkit-flex;
   display: flex;  
     flex-direction: column;
     flex-grow: 1;
