@@ -8,7 +8,10 @@ const PnpWebpackPlugin = require('pnp-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const CaseSensitivePathsPlugin = require('case-sensitive-paths-webpack-plugin');
 const InlineChunkHtmlPlugin = require('react-dev-utils/InlineChunkHtmlPlugin');
+const TerserPlugin = require('terser-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
+const safePostCssParser = require('postcss-safe-parser');
 const ManifestPlugin = require('webpack-manifest-plugin');
 const InterpolateHtmlPlugin = require('react-dev-utils/InterpolateHtmlPlugin');
 const WorkboxWebpackPlugin = require('workbox-webpack-plugin');
@@ -21,11 +24,19 @@ const getClientEnvironment = require('./env');
 const ModuleNotFoundPlugin = require('react-dev-utils/ModuleNotFoundPlugin');
 const ForkTsCheckerWebpackPlugin = require('react-dev-utils/ForkTsCheckerWebpackPlugin');
 const typescriptFormatter = require('react-dev-utils/typescriptFormatter');
+
+const postcssNormalize = require('postcss-normalize');
+
 const appPackageJson = require(paths.appPackageJson);
 
 // Source maps are resource heavy and can cause out of memory issue for large source files.
 const shouldUseSourceMap = process.env.GENERATE_SOURCEMAP !== 'false';
+// Some apps do not need the benefits of saving a web request, so not inlining the chunk
+// makes for a smoother build process.
 const shouldInlineRuntimeChunk = process.env.INLINE_RUNTIME_CHUNK !== 'false';
+
+const isExtendingEslintConfig = process.env.EXTEND_ESLINT === 'true';
+
 const imageInlineSizeLimit = parseInt(
   process.env.IMAGE_INLINE_SIZE_LIMIT || '10000'
 );
@@ -62,16 +73,42 @@ module.exports = function(webpackEnv) {
       isEnvDevelopment && require.resolve('style-loader'),
       isEnvProduction && {
         loader: MiniCssExtractPlugin.loader,
-        options: paths.publicUrlOrPath.startsWith('.') ? { publicPath: '../../' } : {},
+        // css is located in `static/css`, use '../../' to locate index.html folder
+        // in production `paths.publicUrlOrPath` can be a relative path
+        options: paths.publicUrlOrPath.startsWith('.')
+          ? { publicPath: '../../' }
+          : {},
       },
       {
         loader: require.resolve('css-loader'),
         options: cssOptions,
       },
-      
+      {
+        // Options for PostCSS as we reference these options twice
+        // Adds vendor prefixing based on your specified browser support in
+        // package.json
+        loader: require.resolve('postcss-loader'),
+        options: {
+          // Necessary for external CSS imports to work
+          // https://github.com/facebook/create-react-app/issues/2677
+          ident: 'postcss',
+          plugins: () => [
+            require('postcss-flexbugs-fixes'),
+            require('postcss-preset-env')({
+              autoprefixer: {
+                flexbox: 'no-2009',
+              },
+              stage: 3,
+            }),
+            // Adds PostCSS Normalize as the reset css with default options,
+            // so that it honors browserslist config in package.json
+            // which in turn let's users customize the target behavior as per their needs.
+            postcssNormalize(),
+          ],
+          sourceMap: isEnvProduction && shouldUseSourceMap,
+        },
+      },
     ].filter(Boolean);
-
-
     if (preProcessor) {
       loaders.push(
         {
@@ -81,8 +118,10 @@ module.exports = function(webpackEnv) {
           },
         },
         {
-          loader: require.resolve(preProcessor.name),
-          options: preProcessor.options 
+          loader: require.resolve(preProcessor),
+          options: {
+            sourceMap: true,
+          },
         }
       );
     }
@@ -155,11 +194,79 @@ module.exports = function(webpackEnv) {
       globalObject: 'this',
     },
     optimization: {
-      minimize: false,
+      minimize: isEnvProduction,
+      minimizer: [
+        // This is only used in production mode
+        new TerserPlugin({
+          terserOptions: {
+            parse: {
+              // We want terser to parse ecma 8 code. However, we don't want it
+              // to apply any minification steps that turns valid ecma 5 code
+              // into invalid ecma 5 code. This is why the 'compress' and 'output'
+              // sections only apply transformations that are ecma 5 safe
+              // https://github.com/facebook/create-react-app/pull/4234
+              ecma: 8,
+            },
+            compress: {
+              ecma: 5,
+              warnings: false,
+              // Disabled because of an issue with Uglify breaking seemingly valid code:
+              // https://github.com/facebook/create-react-app/issues/2376
+              // Pending further investigation:
+              // https://github.com/mishoo/UglifyJS2/issues/2011
+              comparisons: false,
+              // Disabled because of an issue with Terser breaking valid code:
+              // https://github.com/facebook/create-react-app/issues/5250
+              // Pending further investigation:
+              // https://github.com/terser-js/terser/issues/120
+              inline: 2,
+            },
+            mangle: {
+              safari10: true,
+            },
+            // Added for profiling in devtools
+            keep_classnames: isEnvProductionProfile,
+            keep_fnames: isEnvProductionProfile,
+            output: {
+              ecma: 5,
+              comments: false,
+              // Turned on because emoji and regex is not minified properly using default
+              // https://github.com/facebook/create-react-app/issues/2488
+              ascii_only: true,
+            },
+          },
+          sourceMap: shouldUseSourceMap,
+        }),
+        // This is only used in production mode
+        new OptimizeCSSAssetsPlugin({
+          cssProcessorOptions: {
+            parser: safePostCssParser,
+            map: shouldUseSourceMap
+              ? {
+                  // `inline: false` forces the sourcemap to be output into a
+                  // separate file
+                  inline: false,
+                  // `annotation: true` appends the sourceMappingURL to the end of
+                  // the css file, helping the browser find the sourcemap
+                  annotation: true,
+                }
+              : false,
+          },
+          cssProcessorPluginOptions: {
+            preset: ['default', { minifyFontValues: { removeQuotes: false } }],
+          },
+        }),
+      ],
+      // Automatically split vendor and commons
+      // https://twitter.com/wSokra/status/969633336732905474
+      // https://medium.com/webpack/webpack-4-code-splitting-chunk-graph-and-the-splitchunks-optimization-be739a861366
       splitChunks: {
         chunks: 'all',
         name: false,
-      },      
+      },
+      // Keep the runtime chunk separated to enable long term caching
+      // https://twitter.com/wSokra/status/969679223278505985
+      // https://github.com/facebook/create-react-app/issues/5358
       runtimeChunk: {
         name: entrypoint => `runtime-${entrypoint.name}`,
       },
@@ -354,20 +461,17 @@ module.exports = function(webpackEnv) {
                 {
                   importLoaders: 3,
                   sourceMap: isEnvProduction && shouldUseSourceMap,
-                  
-                  
                 },
-                {                     
-                  name: 'sass-loader', 
-                  options: {                  
-                        sassOptions: {
-                            outputStyle: 'expanded'
-                        }                
-                  }
-                }
-              ), 
+                'sass-loader'
+              ),
+              // Don't consider CSS imports dead code even if the
+              // containing package claims to have no side effects.
+              // Remove this when webpack adds a warning or an error for this.
+              // See https://github.com/webpack/webpack/issues/6571
               sideEffects: true,
-            },  
+            },
+            // Adds support for CSS Modules, but using SASS
+            // using the extension .module.scss or .module.sass
             {
               test: sassModuleRegex,
               use: getStyleLoaders(
@@ -378,14 +482,7 @@ module.exports = function(webpackEnv) {
                     getLocalIdent: getCSSModuleLocalIdent,
                   },
                 },
-                {
-                    name: 'sass-loader', 
-                    options: {                  
-                        sassOptions: {
-                            outputStyle: 'expanded'
-                        }                  
-                    }
-                }
+                'sass-loader'
               ),
             },
             // "file" loader makes sure those assets get served by WebpackDevServer.
@@ -423,14 +520,14 @@ module.exports = function(webpackEnv) {
             ? {
                 minify: {
                   removeComments: true,
-                  collapseWhitespace: false,
+                  collapseWhitespace: true,
                   removeRedundantAttributes: true,
                   useShortDoctype: true,
                   removeEmptyAttributes: true,
                   removeStyleLinkTypeAttributes: true,
                   keepClosingSlash: true,
-                  minifyJS: false,
-                  minifyCSS: false,
+                  minifyJS: true,
+                  minifyCSS: true,
                   minifyURLs: true,
                 },
               }
