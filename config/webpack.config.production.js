@@ -90,14 +90,8 @@ module.exports = function(webpackEnv) {
           ident: 'postcss',
           plugins: () => [
             require('postcss-flexbugs-fixes'),
-            require('postcss-preset-env')({
-              autoprefixer: {
-               
-              },
-              browser
-            }),
-            // Adds PostCSS Normalize as the reset css with default options,
-            // so that it honors browserslist config in package.json            
+            require('postcss-preset-env')(),
+            require('postcss-css-variables')(),
             postcssNormalize(),
           ],
           sourceMap: isEnvProduction && shouldUseSourceMap,
